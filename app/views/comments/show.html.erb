@@ -1,0 +1,27 @@
+<% if @article.comments.empty? %> 
+	<p> No Comments Found </p>
+<% else %>
+ 	<% comments = @article.comments.all %>
+ 	<h4> Listing Comments </h4>
+ 	<ul>
+ 		<% comments.each do |comment| %>
+ 		 <li><%= comment.user.email %> </li><p><%= comment.title %> (<%= comment.body %>)
+ 		 <% if user_signed_in? %>
+ 				<% if comment.user.id == current_user.id %>
+ 				<%= link_to "Delete Comment" , comment_path(comment) ,method: :delete , data: {confirm: "Are You Sure?"} %> - <%= link_to "My comments" , comment_path(current_user) %></p>
+ 				<% end %></li>
+ 			<% end %>
+ 		<% end %>
+ 		</ul>
+<% end %> 
+	<%= form_for Comment.new do |f| %>
+		<%= f.label :Leave_a_comment %> <br/>
+		<%= f.text_field :title %> <br/>
+
+		<%= f.label :Description %> <br/>
+		<%= f.text_area :body %> <br/>
+		
+		<%= f.hidden_field :article_id , value: @article.id %> <br/>
+
+		<%= f.submit "Add Comment" %>
+	<% end %>

@@ -1,0 +1,114 @@
+<p id="notice"><%=notice %></p>
+
+<div class="col-md-8">
+  <div class="page-header">
+    <h2><%= @article.title %></h2>
+  </div>  
+  <img src="http://lorempixel.com/600/400/nature/" alt="Dummy Image" class="img-rounded"> <br>
+  <p class="text-justify"><%= @article.body%></p>
+
+
+  <hr/>
+    <div class="pull-left">
+      <b>Categories : </b>
+      <% @article.categories.each do |category| %>
+        <%= link_to category.name, category %>
+      <% end %>
+    </div>
+
+    <div class="pull-right">
+      <!-- <i class="glyphicon glyphicon-user"></i> <%# article.user.try(:username) %>  -->
+
+      <i class="glyphicon glyphicon-time"></i> <%= @article.published_date %>
+    </div>
+    <br>
+  <hr>
+
+
+  <h4> Comments </h4>
+  <div id="comments_section">
+    <%@article.comments.each do |comment|%>
+
+     <li>title:<%=comment.title%></li>
+      body:<%= comment.body%><br/> 
+
+      <div class="media" id="comment_<%= comment.id %>">
+        <div class="media-left">
+          <img class="media-object" src="http://lorempixel.com/64/64/people/">
+        </div>
+
+        <div class="media-body">
+          <h4 class="media-heading"><%= comment.title%>
+         <!-- <small><span class="pull-right"><%= comment.user.username%></span></small></h4> -->
+          <%= comment.body%>
+          <% if user_signed_in? && comment.user_id == current_user.id %>
+      
+            <%= link_to 'Delete comment',comment, method: :delete, data: { confirm: 'Are you sure?' }, remote: true ,class: "btn btn-danger" %> <br/><br/>
+          <% end %>
+        </div>
+      </div>
+    <%end%>
+  </div>
+
+
+     
+
+ <% if user_signed_in? && current_user.is_admin %>
+    <%= link_to "Edit", edit_article_path(@article) %>  | 
+    <%= link_to "Destroy", article_path(@article), method: :delete, data:{confirm: "Are You Sure?"} %>  |  
+  <% end %>
+
+<%= link_to "Back", articles_path %>
+
+<h3> Add comment </h3>
+<div class ="well">
+<%= form_for Comment.new ,remote: true do |f| %>
+<div class ="form-group">
+<label>Title</label>
+<%= f.text_field :title,class: "form-control" %>
+</div>
+<div class ="form-group">
+<label>Body</label>
+<%= f.text_area :body,class: "form-control" %>
+</div>
+<%= f.hidden_field :article_id, value: @article.id %>
+<%= f.submit "Add comment", class: "btn btn-primary" %>
+<% end %>
+</div>
+
+<%#if can? :update, article %>
+   <%# link_to "Edit", edit_article_path(@article) %>
+  <%# end %>
+
+<%#if can? :destroy, article %>
+   <%# link_to "Destroy", article_path(@article), method: :delete, data:{confirm: "Are You Sure?"} %>
+<%#end %> 
+
+<!-- </div> -->
+
+<div class="col-md-4">
+  <div class="page-header">
+    <h2>Related Articles</h2>
+  </div>
+
+  <% @related_articles.each do |article| %>
+    <img src="http://lorempixel.com/250/100/nature/" alt="Dummy Image" class="img-rounded"> <br>
+    <%= link_to article.title.truncate(50) , article %>
+    <hr>
+  <% end%>
+
+  <div class="page-header">
+    <h3>Categories</h3>
+  </div>
+  <ul class="list-groups">
+    <% Category.all.each do |category| %>
+      <li class="list-group-item">
+        <span class="badge"> <%= category.articles.size %></span>
+        <%= link_to category.name,category %>
+      </li>
+    <%end %>
+  </ul>
+
+</div>
+
+

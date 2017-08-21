@@ -1,0 +1,17 @@
+<h2>Here you can Comment </h2>
+
+  <%= form_for @comment do |c| %>
+ 	
+ 	<%= c.article_id %>
+
+    <%= c.user_id %>
+
+
+   <%= c.label :comment %>
+   <%= c.text_area :body %>
+
+
+
+   <%= c.submit "submit" %>
+
+ <% end %>

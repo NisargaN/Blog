@@ -1,0 +1,41 @@
+<div class="col-md-8">
+ <% @articles.each do |article| %>
+ <div class= "article_listing">
+ <div class= "page-header">
+ <h3><%= article.title%></h3>
+ </div>
+  <img src="http://lorempixel.com/600/250/nature/" alert="Dummy Image" class="Img-rounded">
+
+  <%= article.body.truncate(300)%>
+  <%= link_to "read more", article_path(article.id), class: "btn btn-info"%>
+ </div>
+  <hr/>
+  <div class="pull-left">
+   <b>Categories : </b>
+    <%article.categories.each do |category|%>
+    <%= link_to category.name, category %>
+  <%end%>
+
+ </div>
+
+ <div class="pull-right">
+    <i class="glyphicon glyphicon-time"></i> <%= article.published_date%>
+ </div>
+  <br/>
+  <%end%>
+  <%= will_paginate @articles %>
+ </div>
+
+ <div class="col-md-4">
+   <div class="page-header">
+   <h3>Categories</h3> 
+ </div>
+ <ul class="list-group">
+ <% Category.all.each do |category|%>
+  <li class="list-group-item">
+   <span class="badge"><%= category.articles.size %></span>
+    <%= link_to category.name, category %>
+    </li>
+    <%end%>
+    </ul>
+   </div>
